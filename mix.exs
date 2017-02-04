@@ -28,6 +28,6 @@ defmodule Phrampu.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:sshex, "2.1.1"}]
   end
 end
