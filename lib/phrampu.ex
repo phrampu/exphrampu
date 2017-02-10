@@ -9,7 +9,6 @@ defmodule Phrampu do
       ip: ip,
       user: 'schwar12', 
       password: password)
-    #:ssh.connect(ip, 22, user: 'schwar12', password: password)
   end
 
   def getWho(ip) do
@@ -27,6 +26,18 @@ defmodule Phrampu do
 
   def w(pid) do
     SSHEx.run pid, 'w'
+  end
+
+  def istty(str) do
+    String.contains?(str, "tty")
+  end
+
+  def getStructs(wOut) do
+    String.split(wOut, "\n")
+      |> Enum.slice(2..-1)
+      |> Enum.filter_map(
+         fn(x) -> x != "" end,
+         fn(x) -> WhoStruct.from_string(x) end)
   end
 end
 
