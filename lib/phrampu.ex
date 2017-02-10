@@ -1,65 +1,41 @@
 defmodule Phrampu do
   @moduledoc """
-  Documentation for Phrampu.
+  Something
   """
-
-  def connect(ip, password) do
-    :ssh.start
-    SSHEx.connect(
-      ip: ip,
-      user: 'schwar12', 
-      password: password)
+  use GenServer
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok, [])
   end
 
-  def getWho(ip) do
-    getWho(ip, System.get_env("PHRAMPU_PASSWORD") |> String.to_char_list)
+  def init(state) do
+    {:ok, state}
   end
 
-  def getWho(ip, password) do
-    case connect(ip, password) do
-      {:ok, conn} -> 
-        conn |> w
-      {:error, reason} ->
-        throw reason
-    end
+  def push(pid, item) do
+    GenServer.cast(pid, {:push, item})
   end
 
-  def w(pid) do
-    SSHEx.run pid, 'w'
+  def who(pid, hostname) do
+    GenServer.call(pid, {:who, hostname})
   end
 
-  def istty(str) do
-    String.contains?(str, "tty")
+  # Server (callbacks)
+
+  def handle_call({:who, hostname}, _from, state) do
+    thing = WhoModule.getWho(hostname)
+      |> WhoModule.getStructs
+    {:reply, thing, state}
   end
 
-  def getStructs(wOut) do
-    String.split(wOut, "\n")
-      |> Enum.slice(2..-1)
-      |> Enum.filter_map(
-         fn(x) -> x != "" end,
-         fn(x) -> WhoStruct.from_string(x) end)
+  def handle_call(request, from, state) do
+    super(request, from, state)
   end
-end
 
-defmodule WhoStruct do
-   defstruct user: nil, 
-             tty: nil, 
-             login: nil, 
-             idle: nil,
-             jcpu: nil,
-             pcpu: nil,
-             what: nil
+  def handle_cast({:push, item}, state) do
+    {:noreply, [item | state]}
+  end
 
-   def from_string(str) do
-     [user, tty, login, idle, jcpu, pcpu | what] = String.split str
-     %WhoStruct{
-       user: user,
-       tty: tty,
-       login: login,
-       idle: idle,
-       jcpu: jcpu,
-       pcpu: pcpu,
-       what: what |> Enum.join(" ")
-     }
-   end
+  def handle_cast(request, state) do
+    super(request, state)
+  end
 end
