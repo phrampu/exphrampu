@@ -18,8 +18,7 @@ defmodule WhoModule do
   def getWho(ip, password) do
     case connect(ip, password) do
       {:ok, conn} -> 
-        conn 
-          |> w
+        conn  |> w
       {:error, reason} ->
         throw reason
     end
@@ -31,6 +30,21 @@ defmodule WhoModule do
         wString
       {:error, reason} ->
         throw reason
+    end
+  end
+
+  def getCluster(hostname) do
+    [ name | _ ] = hostname |> to_string |> String.split(".")
+    case String.slice(name, 0..1) do
+      "bo" -> "borg"
+      "po" -> "pod"
+      "da" -> "data"
+      "ta" -> "ta"
+      "lo" -> "lore"
+      "ss" -> "sslab"
+      "mo" -> "moore"
+      "es" -> "escher"
+      "xi" -> "xinu"
     end
   end
 

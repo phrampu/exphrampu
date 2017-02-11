@@ -3,12 +3,10 @@ defmodule Phrampu do
   Something
   """
   use GenServer
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok, [])
-  end
 
-  def init(state) do
-    {:ok, state}
+  # Client
+  def start_link do
+    GenServer.start_link(__MODULE__, :ok)
   end
 
   def who(pid, hostname) do
@@ -16,10 +14,24 @@ defmodule Phrampu do
   end
 
   # Server (callbacks)
+  def init(:ok) do
+    {:ok, %{}}
+  end
+
   def handle_call({:who, hostname}, _from, state) do
-    thing = WhoModule.getWho(hostname)
-      |> WhoModule.getStructs
-    {:reply, thing, state}
+    cluster = WhoModule.getCluster(hostname)
+    structList = WhoModule.getWho(hostname)
+              |> WhoModule.getStructs
+
+    thing = case Map.has_key?(state, cluster) do
+      true ->
+       [ Map.get(state, cluster) | %{hostname => structList} ]
+      false ->
+       [ %{hostname => structList} ]
+    end
+      
+    state2 = Map.put(state, cluster, thing)
+    {:reply, state2, state2}
   end
 
   def handle_call(request, from, state) do
