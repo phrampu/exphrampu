@@ -13,9 +13,17 @@ defmodule Phrampu do
     GenServer.call(pid, {:who, hostname})
   end
 
+  def state(pid) do
+    GenServer.call(pid, :state)
+  end
+
   # Server (callbacks)
   def init(:ok) do
     {:ok, %{}}
+  end
+
+  def handle_call(:state, _from, state) do
+    {:reply, state, state}
   end
 
   def handle_call({:who, hostname}, _from, state) do
