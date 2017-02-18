@@ -1,16 +1,22 @@
 defmodule Phrampu do
   @moduledoc """
-  Something
+  Main phrampu server. This module will
+  keep a map in memory, and coordinate
+  ssh clients
   """
   use GenServer
 
   # Client
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok)
+  def start_link(cluster, urls) do
+    GenServer.start_link(__MODULE__, 
+      %{:cluster => cluster, 
+        :urls => urls, 
+        :map => %{}
+      })
   end
 
-  def who(pid, hostname) do
-    GenServer.call(pid, {:who, hostname})
+  def who(pid, host) do
+    GenServer.call(pid, {:who, host})
   end
 
   def state(pid) do
@@ -18,31 +24,21 @@ defmodule Phrampu do
   end
 
   # Server (callbacks)
-  def init(:ok) do
-    {:ok, %{}}
+  def init(:ok, state) do
+    {:ok}
   end
 
   def handle_call(:state, _from, state) do
     {:reply, state, state}
   end
 
-  def handle_call({:who, hostname}, _from, state) do
-    cluster = WhoModule.getCluster(hostname)
-    structList = WhoModule.getWho(hostname)
+  def handle_call({:who, host}, _from, state) do
+    structList = WhoModule.getWho(host)
               |> WhoModule.getStructs
 
-    thing = case Map.has_key?(state, cluster) do
-      true ->
-       [ Map.get(state, cluster) | %{hostname => structList} ]
-      false ->
-       [ %{hostname => structList} ]
-    end
-      
-    state2 = Map.put(state, cluster, thing)
-    {:reply, state2, state2}
-  end
+    stateMap = Map.put(state[:map], host, structList)
+    state2 = Map.put(state, :map, stateMap)
 
-  def handle_call(request, from, state) do
-    super(request, from, state)
+    {:reply, state2, state2}
   end
 end
