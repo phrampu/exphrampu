@@ -1,8 +1,23 @@
 defmodule HTTPHandler do
   def init(request, state) do
-    pidnum  = :cowboy_req.binding(:pidnum, request)
+    sup = Process.whereis(Phrampu.Server.Supervisor)
 
-    api_result = Phrampu.state(pidnum)
+    pids = case Supervisor.which_children(sup) do
+      {:error, _ } -> []
+      x -> x |> Enum.map(fn x -> elem(x, 1) end)
+    end
+
+    api_result = pids
+      |> Enum.map(fn(pid) -> Phrampu.Server.state(pid) end)
+
+    api_result = case api_result do
+      [] -> [%{}]
+      x -> x
+    end
+
+    api_result = api_result
+      |> Enum.map(fn(m) -> %{m[:cluster] => m[:map]} end)
+      |> Enum.reduce(fn(m, acc) -> Map.merge(m, acc) end)
 
     request = :cowboy_req.reply( 
       200,
@@ -24,7 +39,7 @@ defmodule HTTPModule do
   def start do
     routes = [
       {"/", :cowboy_static, {:priv_file, :phrampu, "index.html"}},
-      {"/phrampu/:pidnum", HTTPHandler, []},
+      {"/phrampu", HTTPHandler, []},
     ]
 
     dispatch_config = :cowboy_router.compile([{ :_, routes}])
