@@ -23,7 +23,9 @@ defmodule Phrampu.Server do
     GenServer.start_link(__MODULE__, 
       %{:cluster => cluster, 
         :urls => urls, 
-        :map => %{}
+        :map => urls 
+                  |> Enum.map(fn(x) -> %{x => []} end) 
+                  |> Enum.reduce(%{}, fn(map, acc) -> Map.merge(acc, map) end)
       }, name: ref(cluster))
   end
 

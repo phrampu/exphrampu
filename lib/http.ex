@@ -1,4 +1,14 @@
 defmodule HTTPHandler do
+	def cluster_count(map) do
+		count_map = map |> Enum.map(fn({host, v}) -> {host, Enum.count(v)} end) 
+		total = count_map |> Enum.count()
+		unavailable = count_map |> Enum.filter(fn({host, num}) -> num == 1 end) |> Enum.count()
+		%{
+			:unavailable => unavailable,
+			:available => total - unavailable 
+		}
+	end
+
   def init(request, state) do
     sup = Process.whereis(Phrampu.Server.Supervisor)
 
@@ -16,7 +26,7 @@ defmodule HTTPHandler do
     end
 
     api_result = api_result
-      |> Enum.map(fn(m) -> %{m[:cluster] => m[:map]} end)
+      |> Enum.map(fn(m) -> %{m[:cluster] => cluster_count(m[:map])} end)
       |> Enum.reduce(fn(m, acc) -> Map.merge(m, acc) end)
 
     request = :cowboy_req.reply( 
