@@ -13,14 +13,15 @@ defmodule Phrampu.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [extra_applications: 
-      [:logger, :cowboy, :ranch, :nimble_csv]]
+      [:logger, :cowboy, :ranch, :nimble_csv, :quantum]]
   end
 
   defp deps do
     [{:sshex, "2.1.1"}, 
      { :cowboy, github: "ninenines/cowboy", tag: "2.0.0-pre.3" },
      {:poison, "~> 3.0"},
-     {:nimble_csv, "~> 0.1.0"}
+     {:nimble_csv, "~> 0.1.0"},
+     {:quantum, ">= 1.9.0"}
     ]
   end
 end
