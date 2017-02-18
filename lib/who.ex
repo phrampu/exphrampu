@@ -6,9 +6,9 @@ defmodule WhoModule do
   def connect(ip, password) do
     :ssh.start
     SSHEx.connect(
-      ip: ip,
+      ip: to_char_list(ip),
       user: 'schwar12', 
-      password: password)
+      password: to_char_list(password))
   end
 
   def getWho(ip) do
@@ -38,9 +38,9 @@ defmodule WhoModule do
     case String.slice(name, 0..1) do
       "bo" -> "borg"
       "po" -> "pod"
-      "da" -> "data"
+      #"da" -> "data"
       "ta" -> "ta"
-      "lo" -> "lore"
+      #"lo" -> "lore"
       "ss" -> "sslab"
       "mo" -> "moore"
       "es" -> "escher"
@@ -59,6 +59,7 @@ defmodule WhoModule do
       |> Enum.filter_map(
          fn(x) -> x != "" end,
          fn(x) -> WhoStruct.from_string(x) end)
+      |> Enum.filter(fn(struc) -> istty(struc.tty) end)
   end
 end
 
