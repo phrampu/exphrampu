@@ -39,7 +39,7 @@ defmodule Phrampu.Constants do
       "borg10.cs.purdue.edu",
       "borg11.cs.purdue.edu",
       "borg12.cs.purdue.edu",
-      "borg13.cs.purdue.edu",
+      #"borg13.cs.purdue.edu",
       "borg14.cs.purdue.edu",
       "borg15.cs.purdue.edu",
       "borg16.cs.purdue.edu",
