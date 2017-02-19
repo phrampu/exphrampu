@@ -52,6 +52,33 @@ defmodule WhoModule do
     String.contains?(str, "tty")
   end
 
+  def mins(str) do
+    [mins | secs] = String.split(str, [":", "m"])
+    mins |> Integer.parse |> elem(0)
+  end
+
+  #TODO Fix this code, use cond and not nested ifs
+  def isidle(str) do
+    if String.contains?(str, "days") do
+      true
+    else
+      if String.contains?(str, "s") do
+        false
+      else
+        if String.contains?(str, "m") do
+          if (mins(str) > 20) do
+            true
+          else
+            false
+          end
+        else
+          false
+        end
+      end
+    end
+  end
+
+
   def getStructs(wOut) do
     wOut
       |> String.split("\n")

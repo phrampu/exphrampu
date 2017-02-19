@@ -15,6 +15,18 @@ defmodule WhoTest do
     assert WhoModule.istty(x.tty)
   end
 
+  test "idle time" do
+    assert WhoModule.isidle("22:12m")
+    assert WhoModule.isidle("37:00m")
+    assert WhoModule.isidle("57:43m")
+    assert WhoModule.isidle("8days")
+    assert WhoModule.isidle("58days")
+    assert WhoModule.isidle("120days")
+    assert !(WhoModule.isidle("1.00s"))
+    assert !(WhoModule.isidle("60.00s"))
+    assert !(WhoModule.isidle("5:45m"))
+  end
+
   test "get cluster" do
     assert WhoModule.getCluster("borg01.cs.purdue.edu") == "borg"
     assert WhoModule.getCluster("borg25.cs.purdue.edu") == "borg"
@@ -22,7 +34,7 @@ defmodule WhoTest do
     assert WhoModule.getCluster("pod5-5.cs.purdue.edu") == "pod"
     assert WhoModule.getCluster("sslab10.cs.purdue.edu") == "sslab"
     assert WhoModule.getCluster("escher.cs.purdue.edu") == "escher"
-    assert WhoModule.getCluster("data.cs.purdue.edu") == "data"
-    assert WhoModule.getCluster("lore.cs.purdue.edu") == "lore"
+    #assert WhoModule.getCluster("data.cs.purdue.edu") == "data"
+    #assert WhoModule.getCluster("lore.cs.purdue.edu") == "lore"
   end
 end
