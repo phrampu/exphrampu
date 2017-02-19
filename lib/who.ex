@@ -53,7 +53,7 @@ defmodule WhoModule do
   end
 
   def mins(str) do
-    [mins | secs] = String.split(str, [":", "m"])
+    [mins | _] = String.split(str, [":", "m"])
     mins |> Integer.parse |> elem(0)
   end
 
