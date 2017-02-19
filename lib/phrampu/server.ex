@@ -57,6 +57,7 @@ defmodule Phrampu.Server do
     {:reply, self(), state}
   end
 
+  #TODO: don't use try/catch
   def handle_call({:who, host}, _from, state) do
     structList = WhoModule.getWho(host)
               |> WhoModule.getStructs
