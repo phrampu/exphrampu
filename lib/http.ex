@@ -1,11 +1,29 @@
 defmodule HTTPHandler do
+  #TODO: Clean this up later, its still O(n) but really bad looking
 	def cluster_count(map) do
-		count_map = map |> Enum.map(fn({host, v}) -> {host, Enum.count(v)} end) 
-		total = count_map |> Enum.count()
-		unavailable = count_map |> Enum.filter(fn({host, num}) -> num == 1 end) |> Enum.count()
+		count_map = map 
+      |> Enum.map(fn({host, v}) -> {host, Enum.count(v)} end) 
+
+		total = count_map
+      |> Enum.count()
+
+		unavailable = count_map 
+      |> Enum.filter(fn({_host, num}) -> num == 1 end)
+      |> Enum.count()
+
+    userList = map
+      |> Enum.filter(fn({_host, v}) -> Enum.count(v) > 0 end)
+      |> Enum.map(fn({_host, v}) -> hd(v).user end)
+
+    users = map
+      |> Enum.filter(fn({_host, v}) -> Enum.count(v) > 0 end)
+      |> Enum.map(fn({_host, v}) -> hd(v) end)
+
 		%{
 			:unavailable => unavailable,
-			:available => total - unavailable 
+			:available => total - unavailable,
+      :users => users,
+      :userlist => userList
 		}
 	end
 
@@ -39,7 +57,7 @@ defmodule HTTPHandler do
     {:ok, request, state}
   end
 
-  def terminate(reason, request, state) do
+  def terminate(_reason, _request, _state) do
     :ok
   end
 end
