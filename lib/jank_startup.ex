@@ -24,6 +24,7 @@ defmodule Jank do
   end
 
   def go do
+    Phrampu.Server.Supervisor.start_link()
     Phrampu.Server.create("xinu", Phrampu.Constants.xinuHosts)
     Phrampu.Server.create("borg", Phrampu.Constants.borgHosts)
     Phrampu.Server.create("pod", Phrampu.Constants.podHosts)
