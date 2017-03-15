@@ -21,7 +21,8 @@ defmodule Phrampu.Mixfile do
      { :cowboy, github: "ninenines/cowboy", tag: "2.0.0-pre.3" },
      {:poison, "~> 3.0"},
      {:nimble_csv, "~> 0.1.0"},
-     {:quantum, ">= 1.9.0"}
+     {:quantum, ">= 1.9.0"},
+     {:dogma, "~> 0.1", only: :dev}
     ]
   end
 end
