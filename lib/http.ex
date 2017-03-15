@@ -81,6 +81,10 @@ defmodule HTTPModule do
 
     env = [dispatch: dispatch_config]
 
-    {:ok, _} = :cowboy.start_http(:http, 100, opts, [env: env])
+    start = :cowboy.start_http(:http, 100, opts, [env: env])
+    case start do
+      {:ok, pid} -> {:ok, pid}
+      {:error, {:already_started, pid}} -> {:ok, pid}
+    end
   end
 end
