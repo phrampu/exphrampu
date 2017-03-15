@@ -1,4 +1,4 @@
-NimbleCSV.define(CSV, separator: ":", escape: "\"")
+NimbleCSV.define(CSV, separator: ":", escape: ~s("))
 
 defmodule LName do
   @moduledoc """
@@ -7,22 +7,22 @@ defmodule LName do
   use GenServer
 
   # Client
-  def create() do
+  def create do
     case GenServer.whereis({:global, LName}) do
       nil -> start_link()
       pid -> {:error, :lname_already_started, pid}
     end
   end
 
-  def start_link() do
+  def start_link do
     table = :ets.new(:lname_lookup, [:ordered_set, :protected, :named_table])
 
     "lname.db"
     |> File.stream!
     |> CSV.parse_stream
     |> Enum.map(fn [careerAcc, name, email | _] ->
-      :ets.insert(:lname_lookup, {careerAcc, 
-        %{name: name |> String.split(",") |> List.first(), 
+      :ets.insert(:lname_lookup, {careerAcc,
+        %{name: name |> String.split(",") |> List.first(),
           email: email}
       })
     end)

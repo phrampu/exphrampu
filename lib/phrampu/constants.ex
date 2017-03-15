@@ -1,5 +1,8 @@
 defmodule Phrampu.Constants do
-  def xinuHosts() do
+  @moduledoc """
+  Provides various constants, which right now is just host lists.
+  """
+  def xinu_hosts do
     [
       "xinu01.cs.purdue.edu",
       "xinu02.cs.purdue.edu",
@@ -24,8 +27,8 @@ defmodule Phrampu.Constants do
       "xinu21.cs.purdue.edu"
     ]
   end
-  
-  def borgHosts() do
+
+  def borg_hosts do
     [
       "borg01.cs.purdue.edu",
       "borg02.cs.purdue.edu",
@@ -39,7 +42,7 @@ defmodule Phrampu.Constants do
       "borg10.cs.purdue.edu",
       "borg11.cs.purdue.edu",
       "borg12.cs.purdue.edu",
-      #"borg13.cs.purdue.edu",
+      "borg13.cs.purdue.edu",
       "borg14.cs.purdue.edu",
       "borg15.cs.purdue.edu",
       "borg16.cs.purdue.edu",
@@ -54,7 +57,7 @@ defmodule Phrampu.Constants do
     ]
   end
 
-  def mooreHosts() do
+  def moore_hosts do
     [
       "moore00.cs.purdue.edu",
       "moore01.cs.purdue.edu",
@@ -84,7 +87,7 @@ defmodule Phrampu.Constants do
     ]
   end
 
-  def podHosts() do
+  def pod_hosts do
     [
       "pod0-0.cs.purdue.edu",
       "pod1-1.cs.purdue.edu",
@@ -115,7 +118,7 @@ defmodule Phrampu.Constants do
     ]
   end
 
-  def ssHosts() do
+  def ss_hosts do
     [
       "sslab00.cs.purdue.edu",
       "sslab01.cs.purdue.edu",
@@ -145,7 +148,7 @@ defmodule Phrampu.Constants do
     ]
   end
 
-  def escherHosts() do
+  def escher_hosts do
     [
       "escher00.cs.purdue.edu",
       "escher01.cs.purdue.edu",

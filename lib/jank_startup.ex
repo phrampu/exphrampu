@@ -1,25 +1,29 @@
 defmodule Jank do
+  @moduledoc """
+    Run Jank.go to start the web server + start the Phrampu nodes.
+    I need to find a better way to do this.
+  """
   defp ref(cluster) do
     {:global, {:cluster, cluster}} |> GenServer.whereis()
   end
 
   def update do
-    spawn_link fn -> Phrampu.Constants.ssHosts 
+    spawn_link fn -> Phrampu.Constants.ssHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("sslab"), x) end) end
 
-    spawn_link fn -> Phrampu.Constants.podHosts 
+    spawn_link fn -> Phrampu.Constants.podHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("pod"), x) end) end
 
-    spawn_link fn -> Phrampu.Constants.borgHosts 
+    spawn_link fn -> Phrampu.Constants.borgHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("borg"), x) end) end
 
-    spawn_link fn -> Phrampu.Constants.xinuHosts 
+    spawn_link fn -> Phrampu.Constants.xinuHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("xinu"), x) end) end
 
-    spawn_link fn -> Phrampu.Constants.mooreHosts 
+    spawn_link fn -> Phrampu.Constants.mooreHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("moore"), x) end) end
 
-    spawn_link fn -> Phrampu.Constants.escherHosts 
+    spawn_link fn -> Phrampu.Constants.escherHosts
       |> Enum.each(fn(x) -> Phrampu.Server.who(ref("escher"), x) end) end
   end
 

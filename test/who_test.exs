@@ -4,7 +4,8 @@ defmodule WhoTest do
   use ExUnit.Case, async: true
 
   test "who struct 1" do
-    x = WhoStruct.from_string("azehady  tty7    Thu18   37:00m  5.35s  5.29s vim system/resched.c")
+    str = "azehady  tty7    Thu18   37:00m  5.35s  5.29s vim system/resched.c"
+    x = WhoStruct.from_string(str)
     assert x.user == "azehady"
     assert x.tty  == "tty7"
     assert x.login == "Thu18"
@@ -22,9 +23,9 @@ defmodule WhoTest do
     assert WhoModule.isidle("8days")
     assert WhoModule.isidle("58days")
     assert WhoModule.isidle("120days")
-    assert !(WhoModule.isidle("1.00s"))
-    assert !(WhoModule.isidle("60.00s"))
-    assert !(WhoModule.isidle("5:45m"))
+    refute WhoModule.isidle("1.00s")
+    refute WhoModule.isidle("60.00s")
+    refute WhoModule.isidle("5:45m")
   end
 
   test "get cluster" do
@@ -34,7 +35,7 @@ defmodule WhoTest do
     assert WhoModule.getCluster("pod5-5.cs.purdue.edu") == "pod"
     assert WhoModule.getCluster("sslab10.cs.purdue.edu") == "sslab"
     assert WhoModule.getCluster("escher.cs.purdue.edu") == "escher"
-    #assert WhoModule.getCluster("data.cs.purdue.edu") == "data"
-    #assert WhoModule.getCluster("lore.cs.purdue.edu") == "lore"
+    # assert WhoModule.getCluster("data.cs.purdue.edu") == "data"
+    # assert WhoModule.getCluster("lore.cs.purdue.edu") == "lore"
   end
 end

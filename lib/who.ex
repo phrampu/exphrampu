@@ -3,21 +3,24 @@ defmodule WhoModule do
   Documentation for Phrampu.
   """
 
-  def connect(ip, password) do
+  def connect(ip, user, password) do
     :ssh.start
     SSHEx.connect(
-      ip: to_char_list(ip),
-      user: 'schwar12', 
-      password: to_char_list(password))
+      ip: ip,
+      user: user,
+      password: password)
   end
 
-  def getWho(ip) do
-    getWho(ip, System.get_env("PHRAMPU_PASSWORD") |> String.to_char_list)
+  def get_who(ip) do
+    ip2 = to_char_list(ip)
+    pass = to_char_list(System.get_env("PHRAMPU_PASSWORD"))
+    user = to_char_list(System.get_env("PHRAMPU_USERNAME"))
+    get_who(ip2, user, pass)
   end
 
-  def getWho(ip, password) do
+  def get_who(ip, password) do
     case connect(ip, password) do
-      {:ok, conn} -> 
+      {:ok, conn} ->
         conn  |> w
       {:error, reason} ->
         throw reason
@@ -33,14 +36,12 @@ defmodule WhoModule do
     end
   end
 
-  def getCluster(hostname) do
+  def get_cluster(hostname) do
     [ name | _ ] = hostname |> to_string |> String.split(".")
     case String.slice(name, 0..1) do
       "bo" -> "borg"
       "po" -> "pod"
-      #"da" -> "data"
       "ta" -> "ta"
-      #"lo" -> "lore"
       "ss" -> "sslab"
       "mo" -> "moore"
       "es" -> "escher"
@@ -48,7 +49,7 @@ defmodule WhoModule do
     end
   end
 
-  def istty(str) do
+  def is_tty(str) do
     String.contains?(str, "tty")
   end
 
@@ -57,8 +58,8 @@ defmodule WhoModule do
     mins |> Integer.parse |> elem(0)
   end
 
-  #TODO Fix this code, use cond and not nested ifs
-  def isidle(str) do
+  # TODO Fix this code, use cond and not nested ifs
+  def is_idle(str) do
     if String.contains?(str, "days") do
       true
     else
@@ -79,21 +80,25 @@ defmodule WhoModule do
   end
 
 
-  def getStructs(wOut) do
+  def get_structs(wOut) do
     wOut
       |> String.split("\n")
       |> Enum.slice(2..-1)
       |> Enum.filter_map(
          fn(x) -> x != "" end,
          fn(x) -> WhoStruct.from_string(x) end)
-      |> Enum.filter(fn(struc) -> istty(struc.tty) end)
+      |> Enum.filter(fn(struc) -> is_tty(struc.tty) end)
   end
 end
 
 defmodule WhoStruct do
-   defstruct user: nil, 
-             tty: nil, 
-             login: nil, 
+  @moduledoc """
+  Struct representing the contents of a single line of a call to 
+  the unix command 'w'
+  """
+   defstruct user: nil,
+             tty: nil,
+             login: nil,
              idle: nil,
              jcpu: nil,
              pcpu: nil,

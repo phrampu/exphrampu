@@ -1,6 +1,9 @@
 # in lib/chat/supervisor.ex
 
 defmodule Phrampu.Server.Supervisor do
+  @moduledoc """
+  Supervisor for our Phrampu nodes
+  """
   use Supervisor
 
   @name Phrampu.Server.Supervisor
@@ -12,8 +15,8 @@ defmodule Phrampu.Server.Supervisor do
   def init(:ok) do
     children = [
       worker(
-        Phrampu.Server, 
-        [], 
+        Phrampu.Server,
+        [],
         restart: :transient
       )
     ]
