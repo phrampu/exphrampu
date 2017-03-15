@@ -77,7 +77,7 @@ defmodule HTTPModule do
 
     dispatch_config = :cowboy_router.compile([{ :_, routes}])
 
-    opts = [{:port, 8080}]
+    opts = [ip: {0, 0, 0, 0}, port: 9666]
 
     env = [dispatch: dispatch_config]
 

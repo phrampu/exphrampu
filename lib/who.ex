@@ -18,21 +18,21 @@ defmodule WhoModule do
     get_who(ip2, user, pass)
   end
 
-  def get_who(ip, password) do
-    case connect(ip, password) do
+  def get_who(ip, user, password) do
+    case connect(ip, user, password) do
       {:ok, conn} ->
-        conn  |> w
+        {:ok, w(conn)}
       {:error, reason} ->
-        throw reason
+        {:error, reason}
     end
   end
 
   def w(pid) do
     case SSHEx.run pid, 'w' do
       {:ok, wString, 0} ->
-        wString
+        {:ok, wString}
       {:error, reason} ->
-        throw reason
+        {:error, reason}
     end
   end
 

@@ -52,14 +52,18 @@ defmodule Phrampu.Server do
 
   # TODO: don't use try/catch
   def handle_call({:who, host}, _from, state) do
-    who = WhoModule.getWho(host)
-    struct_list = who
-              |> WhoModule.getStructs
+    who = WhoModule.get_who(host)
+    case who do
+      {:error, reason} ->
+        {:reply, state, state}
+      _ ->
+        struct_list = who |> WhoModule.get_structs
 
-    state_map = Map.put(state[:map], host, struct_list)
-    state2 = Map.put(state, :map, state_map)
+        state_map = Map.put(state[:map], host, struct_list)
+        state2 = Map.put(state, :map, state_map)
 
-    {:reply, state2, state2}
+        {:reply, state2, state2}
+    end
   end
 
   defp ref(cluster) do
