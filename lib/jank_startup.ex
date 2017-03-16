@@ -3,39 +3,43 @@ defmodule Jank do
     Run Jank.go to start the web server + start the Phrampu nodes.
     I need to find a better way to do this.
   """
-  defp ref(cluster) do
-    {:global, {:cluster, cluster}} |> GenServer.whereis()
+  defp clusterMap do
+    %{
+      "sslab" => Phrampu.Constants.ss_hosts,
+      "pod" => Phrampu.Constants.pod_hosts,
+      "borg" => Phrampu.Constants.borg_hosts,
+      "xinu" => Phrampu.Constants.xinu_hosts,
+      "moore" => Phrampu.Constants.moore_hosts,
+      "escher" => Phrampu.Constants.escher_hosts,
+    }
   end
 
-  def update do
-    spawn_link fn -> Phrampu.Constants.ss_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("sslab"), x) end) end
+  def update(cluster, urls) do
+    spawn_link fn -> urls
+      |> Enum.each(fn(x) -> Phrampu.Server.who(cluster, x) end)
+    end
+  end
 
-    spawn_link fn -> Phrampu.Constants.pod_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("pod"), x) end) end
+  def update_all do
+    clusterMap() |> Enum.each(fn({cluster, urls}) ->
+      update(cluster, urls)
+    end)
+  end
 
-    spawn_link fn -> Phrampu.Constants.borg_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("borg"), x) end) end
+  def create(cluster, urls) do
+    Phrampu.Server.create(cluster, urls)
+  end
 
-    spawn_link fn -> Phrampu.Constants.xinu_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("xinu"), x) end) end
-
-    spawn_link fn -> Phrampu.Constants.moore_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("moore"), x) end) end
-
-    spawn_link fn -> Phrampu.Constants.escher_hosts
-      |> Enum.each(fn(x) -> Phrampu.Server.who(ref("escher"), x) end) end
+  def create_all do
+    clusterMap() |> Enum.each(fn({cluster, urls}) ->
+      create(cluster, urls)
+    end)
   end
 
   def go do
     Phrampu.Server.Supervisor.start_link()
-    Phrampu.Server.create("xinu", Phrampu.Constants.xinu_hosts)
-    Phrampu.Server.create("borg", Phrampu.Constants.borg_hosts)
-    Phrampu.Server.create("pod", Phrampu.Constants.pod_hosts)
-    Phrampu.Server.create("moore", Phrampu.Constants.moore_hosts)
-    Phrampu.Server.create("escher", Phrampu.Constants.escher_hosts)
-    Phrampu.Server.create("sslab", Phrampu.Constants.ss_hosts)
+    create_all()
     spawn_link fn -> HTTPModule.start end
-    spawn_link fn -> Jank.update() end
+    spawn_link fn -> Jank.update_all() end
   end
 end
