@@ -6,6 +6,8 @@ defmodule HTTPHandler do
   def cluster_count(map) do
     count_map = map
       |> Enum.map(fn({host, v}) -> {host, Enum.count(v)} end)
+    IO.puts "map"
+    IO.inspect map
 
     total = count_map
       |> Enum.count()

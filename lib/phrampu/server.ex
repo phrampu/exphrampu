@@ -23,14 +23,22 @@ defmodule Phrampu.Server do
     GenServer.start_link(__MODULE__,
       %{:cluster => cluster,
         :urls => urls,
-        :map => urls
-                  |> Enum.map(fn(x) -> %{x => []} end)
-                  |> Enum.reduce(%{}, fn(map, acc) -> Map.merge(acc, map) end)
+        :map => %{},
       }, name: ref(cluster))
   end
 
   def who(pid, host) do
-    GenServer.call(pid, {:who, host})
+    IO.puts "who"
+    try do
+      ret = GenServer.call(pid, {:who, host})
+      IO.puts "ret:"
+      IO.inspect ret
+      ret
+    catch
+      :exit, reason -> 
+        IO.puts "fuck"    
+        {:error, reason}
+    end
   end
 
   def state(pid) do
@@ -52,21 +60,31 @@ defmodule Phrampu.Server do
 
   # TODO: don't use try/catch
   def handle_call({:who, host}, _from, state) do
+    IO.puts "handle_call :who"
     who = WhoModule.get_who(host)
     case who do
       {:error, reason} ->
+        IO.puts "Server error handling :who:"
+        IO.inspect reason
         {:reply, state, state}
-      _ ->
-        struct_list = who |> WhoModule.get_structs
+      {:ok, whoList} ->
+        IO.inspect whoList
+        struct_list = whoList |> WhoModule.get_structs
 
         state_map = Map.put(state[:map], host, struct_list)
         state2 = Map.put(state, :map, state_map)
 
         {:reply, state2, state2}
+      _ ->
+        IO.puts "how the fuck"
     end
   end
 
   defp ref(cluster) do
     {:global, {:cluster, cluster}}
+  end
+
+  def refpid(cluster) do
+    {:global, {:cluster, cluster}} |> GenServer.whereis()
   end
 end

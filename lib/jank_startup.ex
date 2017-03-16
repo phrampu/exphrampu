@@ -16,7 +16,11 @@ defmodule Jank do
 
   def update(cluster, urls) do
     spawn_link fn -> urls
-      |> Enum.each(fn(x) -> Phrampu.Server.who(cluster, x) end)
+      |> Enum.each(fn(x) ->
+        pid = Phrampu.Server.refpid(cluster)
+        IO.inspect pid 
+        Phrampu.Server.who(pid, x) 
+      end)
     end
   end
 
@@ -40,6 +44,6 @@ defmodule Jank do
     Phrampu.Server.Supervisor.start_link()
     create_all()
     spawn_link fn -> HTTPModule.start end
-    spawn_link fn -> Jank.update_all() end
+    # spawn_link fn -> Jank.update_all() end
   end
 end

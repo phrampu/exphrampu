@@ -19,11 +19,23 @@ defmodule WhoModule do
   end
 
   def get_who(ip, user, password) do
+    IO.puts("get_who #{ip} #{user} #{password}")
     case connect(ip, user, password) do
       {:ok, conn} ->
-        {:ok, w(conn)}
+        case w(conn) do
+          {:ok, ret} ->
+            {:ok, ret}
+          {:error, error} ->
+            {:error, error}
+          _ ->
+            IO.puts "wtf"
+        end
       {:error, reason} ->
+        IO.puts "error"
+        IO.inspect reason
         {:error, reason}
+      _ ->
+        IO.puts "wtf"
     end
   end
 
