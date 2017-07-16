@@ -10,19 +10,24 @@ defmodule Phrampu.Mixfile do
      deps: deps()]
   end
 
+  # Configuration for the OTP application
+  #
+  # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications:
-      [:logger, :cowboy, :ranch, :nimble_csv, :quantum]]
+    [extra_applications: [:logger]]
   end
 
+  # Dependencies can be Hex packages:
+  #
+  #   {:my_dep, "~> 0.3.0"}
+  #
+  # Or git/path repositories:
+  #
+  #   {:my_dep, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+  #
+  # Type "mix help deps" for more examples and options
   defp deps do
-    [{:sshex, "2.1.1"},
-     { :cowboy, github: "ninenines/cowboy", tag: "2.0.0-pre.3" },
-     {:poison, "~> 3.0"},
-     {:nimble_csv, "~> 0.1.0"},
-     {:quantum, ">= 1.9.0"},
-     {:dogma, "~> 0.1", only: :dev}
-    ]
+    []
   end
 end
