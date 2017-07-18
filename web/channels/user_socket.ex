@@ -2,7 +2,8 @@ defmodule Phrampu.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", Phrampu.RoomChannel
+  channel "room", Phrampu.RoomChannel
+
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
