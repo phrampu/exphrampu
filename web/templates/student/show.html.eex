@@ -1,0 +1,28 @@
+<h2>Show student</h2>
+
+<ul>
+
+  <li>
+    <strong>Career acc:</strong>
+    <%= @student.career_acc %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @student.name %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @student.email %>
+  </li>
+
+  <li>
+    <strong>Machine:</strong>
+    <%= @student.machine %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: student_path(@conn, :edit, @student) %>
+<%= link "Back", to: student_path(@conn, :index) %>
