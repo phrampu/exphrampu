@@ -39,6 +39,7 @@ defmodule Phrampu.Mixfile do
       {:gettext, "~> 0.11"},
       {:nimble_csv, "~> 0.1.0"},
       {:cowboy, "~> 1.0"},
+      {:sshex, "2.2.0"},
       {:distillery, "~> 1.4", runtime: false}
     ]
   end
