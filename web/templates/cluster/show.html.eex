@@ -1,0 +1,13 @@
+<h2>Show cluster</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @cluster.name %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: cluster_path(@conn, :edit, @cluster) %>
+<%= link "Back", to: cluster_path(@conn, :index) %>

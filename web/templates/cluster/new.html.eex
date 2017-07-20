@@ -1,0 +1,6 @@
+<h2>New cluster</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: cluster_path(@conn, :create) %>
+
+<%= link "Back", to: cluster_path(@conn, :index) %>

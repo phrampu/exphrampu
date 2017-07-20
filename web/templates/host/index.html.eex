@@ -1,0 +1,28 @@
+<h2>Listing hosts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Cluster</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for host <- @hosts do %>
+    <tr>
+      <td><%= host.name %></td>
+      <td><%= host.cluster %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: host_path(@conn, :show, host), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: host_path(@conn, :edit, host), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: host_path(@conn, :delete, host), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New host", to: host_path(@conn, :new) %>

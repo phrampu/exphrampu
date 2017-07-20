@@ -18,6 +18,8 @@ defmodule Phrampu.Router do
 
     get "/", PageController, :index
     resources "/students", StudentController
+    resources "/clusters", ClusterController
+    resources "/hosts", HostController
   end
 
 
