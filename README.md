@@ -1,13 +1,9 @@
 # Phrampu
 
-**TODO: Add description**
+* Install dependencies with `mix deps.get`
+* Create and migrate your database with `mix ecto.create && mix ecto.migrate`
+* Install Node.js dependencies with `npm install`
+* Download lname.db file from lab machines (/p/lname/lname.db) and put in this directory
+* Seed db with lname.db file using `mix run priv/repo/seeds.exs`
+* Start Phoenix endpoint with `mix phoenix.server`
 
-## Installation
-
-1. Put the lname.db file in the root directory. Without it, phrampu will still function, but no names will be listed with entries.
-
-2. Set PHRAMPU_PASSWORD to your cs password
-
-3. iex -S mix
-
-4. Jank.go

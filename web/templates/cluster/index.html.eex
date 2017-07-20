@@ -1,0 +1,26 @@
+<h2>Listing clusters</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for cluster <- @clusters do %>
+    <tr>
+      <td><%= cluster.name %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: cluster_path(@conn, :show, cluster), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: cluster_path(@conn, :edit, cluster), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: cluster_path(@conn, :delete, cluster), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New cluster", to: cluster_path(@conn, :new) %>

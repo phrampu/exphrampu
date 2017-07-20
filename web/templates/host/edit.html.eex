@@ -1,0 +1,6 @@
+<h2>Edit host</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: host_path(@conn, :update, @host) %>
+
+<%= link "Back", to: host_path(@conn, :index) %>

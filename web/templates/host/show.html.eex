@@ -1,0 +1,18 @@
+<h2>Show host</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @host.name %>
+  </li>
+
+  <li>
+    <strong>Cluster:</strong>
+    <%= @host.cluster %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: host_path(@conn, :edit, @host) %>
+<%= link "Back", to: host_path(@conn, :index) %>
