@@ -4,6 +4,7 @@ defmodule Phrampu.Repo.Migrations.CreateCluster do
   def change do
     create table(:clusters) do
       add :name, :string
+      add :room, :string
 
       timestamps()
     end

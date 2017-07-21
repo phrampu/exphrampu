@@ -13,7 +13,7 @@
 <%= for host <- @hosts do %>
     <tr>
       <td><%= host.name %></td>
-      <td><%= host.cluster %></td>
+      <td><%= host.cluster_id %></td>
 
       <td class="text-right">
         <%= link "Show", to: host_path(@conn, :show, host), class: "btn btn-default btn-xs" %>

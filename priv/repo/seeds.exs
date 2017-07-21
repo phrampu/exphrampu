@@ -12,8 +12,12 @@
 NimbleCSV.define(CSV, separator: ":", escape: ~s("))
 
 alias Phrampu.Student
+alias Phrampu.Host
+alias Phrampu.Cluster
 
 Phrampu.Repo.delete_all(Student)
+Phrampu.Repo.delete_all(Host)
+Phrampu.Repo.delete_all(Cluster)
 
 "lname.db"
 	|> File.stream!
@@ -28,3 +32,21 @@ Phrampu.Repo.delete_all(Student)
 		 changeset = Student.changeset(%Student{}, params)
 		 Phrampu.Repo.insert!(changeset)
 		end)
+
+Application.get_env(:phrampu, :clusters)
+	|> Enum.each(fn %{hosts: hosts, name: name, room: room} -> 
+    cluster_changeset = Cluster.changeset(%Cluster{}, %{
+      name: name,
+      room: room
+    })
+    cluster = Phrampu.Repo.insert!(cluster_changeset)
+    hosts |>
+      Enum.each(fn host ->
+        host_changeset = Host.changeset(%Host{}, %{
+          name: host,
+          cluster_id: cluster.id
+        })
+        Phrampu.Repo.insert!(host_changeset)
+      end)
+  end)
+

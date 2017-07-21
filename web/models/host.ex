@@ -13,7 +13,8 @@ defmodule Phrampu.Host do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name])
-    |> validate_required([:name])
+    |> cast(params, [:name, :cluster_id])
+    |> validate_required([:name, :cluster_id])
+    |> assoc_constraint(:cluster)
   end
 end

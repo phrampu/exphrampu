@@ -7,6 +7,11 @@
     <%= @cluster.name %>
   </li>
 
+  <li>
+    <strong>Room:</strong>
+    <%= @cluster.room %>
+  </li>
+
 </ul>
 
 <%= link "Edit", to: cluster_path(@conn, :edit, @cluster) %>

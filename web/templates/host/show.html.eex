@@ -9,7 +9,7 @@
 
   <li>
     <strong>Cluster:</strong>
-    <%= @host.cluster %>
+    <%= @host.cluster_id %>
   </li>
 
 </ul>
