@@ -1,6 +1,9 @@
 defmodule Phrampu.Who do
   use Phrampu.Web, :model
 
+  @derive {Poison.Encoder, only: 
+    [:host, :student, :login, :what]
+  }
   schema "whos" do
     field :is_tty, :boolean, default: false
     field :is_idle, :boolean, default: false

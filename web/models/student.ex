@@ -1,6 +1,9 @@
 defmodule Phrampu.Student do
   use Phrampu.Web, :model
 
+  @derive {Poison.Encoder, only: 
+    [:career_acc, :name, :email]
+  }
   schema "students" do
     field :career_acc, :string
     field :name, :string

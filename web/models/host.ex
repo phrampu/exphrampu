@@ -2,6 +2,9 @@ defmodule Phrampu.Host do
   use Phrampu.Web, :model
   import Ecto.Query
 
+  @derive {Poison.Encoder, only: 
+    [:name, :cluster]
+  }
   schema "hosts" do
     field :name, :string
     belongs_to :cluster, Phrampu.Cluster

@@ -23,9 +23,9 @@ defmodule Phrampu.Router do
     resources "/whos", WhoController
   end
 
+  scope "/api", Phrampu do
+    pipe_through :api
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Phrampu do
-  #   pipe_through :api
-  # end
+    resources "/active", ActiveController
+  end
 end

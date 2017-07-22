@@ -2,6 +2,9 @@ defmodule Phrampu.Cluster do
   use Phrampu.Web, :model
   import Ecto.Query
 
+  @derive {Poison.Encoder, only: 
+    [:name, :room]
+  }
   schema "clusters" do
     field :name, :string
     field :room, :string
