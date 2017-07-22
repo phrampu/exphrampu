@@ -7,6 +7,7 @@ defmodule Phrampu.ActiveController do
   def index(conn, _params) do
     whos = Who
       |> Who.not_idle
+      |> Who.is_recent
       |> Ecto.Query.preload([:student])
       |> Ecto.Query.preload([host: :cluster])
       |> Repo.all

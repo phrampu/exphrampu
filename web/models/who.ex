@@ -2,7 +2,7 @@ defmodule Phrampu.Who do
   use Phrampu.Web, :model
 
   @derive {Poison.Encoder, only: 
-    [:host, :student, :login, :what]
+    [:host, :student, :login, :what, :inserted_at, :updated_at]
   }
   schema "whos" do
     field :is_tty, :boolean, default: false
@@ -27,6 +27,19 @@ defmodule Phrampu.Who do
   def is_tty(query) do
     query 
 			|> where([w], w.is_tty == true)
+  end
+
+  def mins_ago(mins) do
+    :erlang.universaltime
+    |> :calendar.datetime_to_gregorian_seconds
+    |> Kernel.-(mins * 60)
+    |> :calendar.gregorian_seconds_to_datetime
+    |> Ecto.DateTime.cast!
+  end
+
+  def is_recent(query) do
+    query
+      |> where([w], w.updated_at >= type(^mins_ago(20), Ecto.DateTime))
   end
 
   @doc """
