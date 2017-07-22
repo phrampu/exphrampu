@@ -16,6 +16,16 @@ defmodule Phrampu.Who do
     timestamps()
   end
 
+  def not_idle(query) do
+    query 
+			|> where([w], w.is_idle == false)
+  end
+
+  def is_tty(query) do
+    query 
+			|> where([w], w.is_tty == true)
+  end
+
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
