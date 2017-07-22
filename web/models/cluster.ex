@@ -1,5 +1,6 @@
 defmodule Phrampu.Cluster do
   use Phrampu.Web, :model
+  import Ecto.Query
 
   schema "clusters" do
     field :name, :string
