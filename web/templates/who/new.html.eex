@@ -1,0 +1,6 @@
+<h2>New who</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: who_path(@conn, :create) %>
+
+<%= link "Back", to: who_path(@conn, :index) %>

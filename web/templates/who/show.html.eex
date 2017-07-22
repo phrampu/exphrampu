@@ -1,0 +1,53 @@
+<h2>Show who</h2>
+
+<ul>
+
+  <li>
+    <strong>Host:</strong>
+    <%= @who.host_id %>
+  </li>
+
+  <li>
+    <strong>Student:</strong>
+    <%= @who.student_id %>
+  </li>
+
+  <li>
+    <strong>Is tty:</strong>
+    <%= @who.is_tty %>
+  </li>
+
+  <li>
+    <strong>Tty:</strong>
+    <%= @who.tty %>
+  </li>
+
+  <li>
+    <strong>Login:</strong>
+    <%= @who.login %>
+  </li>
+
+  <li>
+    <strong>Idle:</strong>
+    <%= @who.idle %>
+  </li>
+
+  <li>
+    <strong>Jcpu:</strong>
+    <%= @who.jcpu %>
+  </li>
+
+  <li>
+    <strong>Pcpu:</strong>
+    <%= @who.pcpu %>
+  </li>
+
+  <li>
+    <strong>What:</strong>
+    <%= @who.what %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: who_path(@conn, :edit, @who) %>
+<%= link "Back", to: who_path(@conn, :index) %>

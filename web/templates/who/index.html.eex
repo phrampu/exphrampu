@@ -1,0 +1,44 @@
+<h2>Listing whos</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Host</th>
+      <th>Student</th>
+      <th>Is tty</th>
+      <th>Is idle</th>
+      <th>Tty</th>
+      <th>Login</th>
+      <th>Idle</th>
+      <th>Jcpu</th>
+      <th>Pcpu</th>
+      <th>What</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for who <- @whos do %>
+    <tr>
+      <td><%= who.host_id %></td>
+      <td><%= who.student_id %></td>
+      <td><%= who.is_tty %></td>
+      <td><%= who.is_idle %></td>
+      <td><%= who.tty %></td>
+      <td><%= who.login %></td>
+      <td><%= who.idle %></td>
+      <td><%= who.jcpu %></td>
+      <td><%= who.pcpu %></td>
+      <td><%= who.what %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: who_path(@conn, :show, who), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: who_path(@conn, :edit, who), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: who_path(@conn, :delete, who), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New who", to: who_path(@conn, :new) %>

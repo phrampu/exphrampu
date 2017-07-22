@@ -3,7 +3,8 @@
 * Install dependencies with `mix deps.get`
 * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
 * Install Node.js dependencies with `npm install`
-* Download lname.db file from lab machines (/p/lname/lname.db) and put in this directory
-* Seed db with lname.db file using `mix run priv/repo/seeds.exs`
+* Set PHRAMPU_USERNAME and PHRAMPU_PASSWORD environment variables to be your school user + pass
+* Run ./getlname.db to get the lname.db file
+* Run `mix run priv/repo/seeds.exs` to see the db
 * Start Phoenix endpoint with `mix phoenix.server`
 

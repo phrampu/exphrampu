@@ -1,0 +1,71 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= label f, :host_id, class: "control-label" %>
+    <%= text_input f, :host_id, class: "form-control" %>
+    <%= error_tag f, :host_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :student_id, class: "control-label" %>
+    <%= text_input f, :student_id, class: "form-control" %>
+    <%= error_tag f, :student_id %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :is_tty, class: "control-label" %>
+    <%= checkbox f, :is_tty, class: "form-control" %>
+    <%= error_tag f, :is_tty %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :is_idle, class: "control-label" %>
+    <%= checkbox f, :is_idle, class: "form-control" %>
+    <%= error_tag f, :is_idle %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :tty, class: "control-label" %>
+    <%= text_input f, :tty, class: "form-control" %>
+    <%= error_tag f, :tty %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :login, class: "control-label" %>
+    <%= text_input f, :login, class: "form-control" %>
+    <%= error_tag f, :login %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :idle, class: "control-label" %>
+    <%= text_input f, :idle, class: "form-control" %>
+    <%= error_tag f, :idle %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :jcpu, class: "control-label" %>
+    <%= text_input f, :jcpu, class: "form-control" %>
+    <%= error_tag f, :jcpu %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :pcpu, class: "control-label" %>
+    <%= text_input f, :pcpu, class: "form-control" %>
+    <%= error_tag f, :pcpu %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :what, class: "control-label" %>
+    <%= text_input f, :what, class: "form-control" %>
+    <%= error_tag f, :what %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>
