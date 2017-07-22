@@ -10,6 +10,12 @@ config :phrampu,
   ecto_repos: [Phrampu.Repo],
   clusters: [
     %{
+      name: "etc",
+      room: "N/A",
+      hosts:
+      ["data.cs.purdue.edu"]
+    },
+    %{
       name: "xinu",
       room: "HAAS 257",
       hosts:

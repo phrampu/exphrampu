@@ -20,6 +20,7 @@ defmodule Phrampu.Router do
     resources "/students", StudentController
     resources "/clusters", ClusterController
     resources "/hosts", HostController
+    resources "/whos", WhoController
   end
 
 

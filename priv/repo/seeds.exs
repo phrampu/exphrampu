@@ -14,10 +14,12 @@ NimbleCSV.define(CSV, separator: ":", escape: ~s("))
 alias Phrampu.Student
 alias Phrampu.Host
 alias Phrampu.Cluster
+alias Phrampu.Who
 
 Phrampu.Repo.delete_all(Student)
 Phrampu.Repo.delete_all(Host)
 Phrampu.Repo.delete_all(Cluster)
+Phrampu.Repo.delete_all(Who)
 
 "lname.db"
 	|> File.stream!
