@@ -1,5 +1,6 @@
 defmodule Phrampu.WhoModule do
   alias Phrampu.Who
+  require Logger
 
   def user do
     System.get_env("PHRAMPU_USERNAME")
@@ -24,9 +25,19 @@ defmodule Phrampu.WhoModule do
           {:ok, ret} ->
             {:ok, ret}
           error ->
+            Logger.error "couldn't connect to #{hostname}"
             error
         end
       error ->
+        error
+    end
+  end
+
+  def get_who!(hostname) do
+    case get_who(hostname) do
+      {:ok, ret} ->
+        ret
+      {:error, error} ->
         error
     end
   end
@@ -70,7 +81,7 @@ defmodule Phrampu.WhoModule do
     end
   end
 
-  def insert_whos(hostname, w_string) do
+  def insert_whos(w_string, hostname) do
     w_string
     |> String.split("\n")
     |> Enum.slice(2..-1)
@@ -79,11 +90,13 @@ defmodule Phrampu.WhoModule do
   end
 
   def insert(hostname, who_string) do
-    [user, tty, login, idle, jcpu, pcpu | what] = String.split who_string
+    [user, tty, from, login, idle, jcpu, pcpu | what] = String.split who_string
+    IO.inspect from
     Who.changeset(%Who{}, %{
       student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
       host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
       tty: tty,
+      from: from,
       is_tty: tty |> is_tty,
       is_idle: idle |> is_idle,
       login: login,
@@ -91,6 +104,6 @@ defmodule Phrampu.WhoModule do
       jcpu: jcpu,
       pcpu: pcpu,
       what: what |> Enum.join(" ")
-    }) |> Phrampu.Repo.insert!
+    }) |> Phrampu.Repo.insert
   end
 end

@@ -1,7 +1,7 @@
 defmodule Phrampu.RoomChannel do
   use Phoenix.Channel
 
-  def join("room", _payload, socket) do
+  def join("phrampu", _payload, socket) do
     {:ok, socket}
   end
 

@@ -2,13 +2,14 @@ defmodule Phrampu.Who do
   use Phrampu.Web, :model
 
   @derive {Poison.Encoder, only: 
-    [:host, :student, :login, :what, :inserted_at, :updated_at]
+    [:host, :student, :login, :idle, :from, :jcpu, :pcpu, :what, :inserted_at, :updated_at]
   }
   schema "whos" do
     field :is_tty, :boolean, default: false
     field :is_idle, :boolean, default: false
     field :tty, :string
     field :login, :string
+    field :from, :string
     field :idle, :string
     field :jcpu, :string
     field :pcpu, :string
@@ -47,8 +48,8 @@ defmodule Phrampu.Who do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :idle, :jcpu, :pcpu, :what])
-    |> validate_required([:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :idle, :jcpu, :pcpu, :what])
+    |> cast(params, [:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :from, :idle, :jcpu, :pcpu, :what])
+    |> validate_required([:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :from, :idle, :jcpu, :pcpu, :what])
     |> assoc_constraint(:host)
     |> assoc_constraint(:student)
   end
