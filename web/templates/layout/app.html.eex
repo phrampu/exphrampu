@@ -9,8 +9,11 @@
 
     <title>Hello Phrampu!</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ratchet/2.0.2/css/ratchet.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ratchet/2.0.2/js/ratchet.js"></script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </head>
 
   <body>
@@ -28,10 +31,33 @@
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
       <main role="main">
-        <%= render @view_module, @view_template, assigns %>
+      <%= render @view_module, @view_template, assigns %>
       </main>
 
-    </div> <!-- /container -->
+    </div>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script>
+    var url = "http://austinschwartz.com:4000/api/";
+    var app = new Vue({
+      el: '.container',
+      data: {
+        counts: {},
+        master: {},
+        people: {},
+      },
+      created: function() {
+        this.fetchData();
+      },
+      methods: {
+        fetchData: function () {
+          var self = this;
+          $.getJSON( url + 'active', function( data ) {
+            self.master = data['response'];
+          });
+        }
+      }
+    });
+    </script>
   </body>
 </html>

@@ -2,7 +2,7 @@ defmodule Phrampu.Who do
   use Phrampu.Web, :model
 
   @derive {Poison.Encoder, only: 
-    [:host, :student, :login, :idle, :from, :jcpu, :pcpu, :what, :inserted_at, :updated_at]
+    [:student, :what, :updated_at]
   }
   schema "whos" do
     field :is_tty, :boolean, default: false
@@ -43,13 +43,24 @@ defmodule Phrampu.Who do
       |> where([w], w.updated_at >= type(^mins_ago(20), Ecto.DateTime))
   end
 
+  def get_active_whos(query) do
+    from w in query,
+      join: h in assoc(w, :host),
+      join: c in assoc(h, :cluster),
+      #w.is_tty and 
+      where: not w.is_idle and w.updated_at >= type(^Phrampu.Who.mins_ago(20), Ecto.DateTime),
+      preload: 
+        [host: {h, 
+            cluster: c}]
+  end
+
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :from, :idle, :jcpu, :pcpu, :what])
-    |> validate_required([:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :from, :idle, :jcpu, :pcpu, :what])
+    |> validate_required([:student_id, :host_id, :is_tty, :is_idle, :tty, :login, :idle, :jcpu, :pcpu, :what])
     |> assoc_constraint(:host)
     |> assoc_constraint(:student)
   end

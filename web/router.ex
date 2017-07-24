@@ -27,5 +27,6 @@ defmodule Phrampu.Router do
     pipe_through :api
 
     resources "/active", ActiveController
+    resources "/whos", WhoListController
   end
 end

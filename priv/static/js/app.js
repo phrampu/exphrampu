@@ -1501,17 +1501,17 @@ var socket = new _phoenix.Socket("/socket", { params: { token: window.userToken 
 socket.connect();
 
 var channel = socket.channel("phrampu", {});
-var list = $('#message-list');
-var message = $('#message');
-var name = $('#name');
+
+var data = [];
 
 channel.on('new_message', function (payload) {
-  console.log(payload);
-  list.text(payload.data);
+  data = payload.data;
+  console.log(data);
 });
 
 channel.join().receive("ok", function (resp) {
   console.log("Joined successfully", resp);
+  channel.push('send_data', {});
 }).receive("error", function (resp) {
   console.log("Unable to join", resp);
 });

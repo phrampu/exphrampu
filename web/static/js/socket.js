@@ -10,17 +10,18 @@ let socket = new Socket("/socket", {params: {token: window.userToken}});
 socket.connect();
 
 let channel = socket.channel("phrampu", {});
-let list    = $('#message-list');
-let message = $('#message');
-let name    = $('#name');
+
+var data = [];
 
 channel.on('new_message', payload => {
-  console.log(payload);
-  list.text(payload.data);
+  data = payload.data;
+  console.log(data);
 });
 
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("ok", resp => { console.log("Joined successfully", resp);
+    channel.push('send_data', {});
+  })
   .receive("error", resp => { console.log("Unable to join", resp) });
 
 

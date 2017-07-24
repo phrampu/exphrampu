@@ -9,6 +9,7 @@
       <th>Is idle</th>
       <th>Tty</th>
       <th>Login</th>
+      <th>From</th>
       <th>Idle</th>
       <th>Jcpu</th>
       <th>Pcpu</th>
@@ -26,6 +27,7 @@
       <td><%= who.is_idle %></td>
       <td><%= who.tty %></td>
       <td><%= who.login %></td>
+      <td><%= who.from %></td>
       <td><%= who.idle %></td>
       <td><%= who.jcpu %></td>
       <td><%= who.pcpu %></td>
