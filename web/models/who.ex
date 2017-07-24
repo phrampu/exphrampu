@@ -24,8 +24,7 @@ defmodule Phrampu.Who do
     query 
       |> where([w], w.is_idle == false)
   end
-
-  def is_tty(query) do
+def is_tty(query) do
     query 
       |> where([w], w.is_tty == true)
   end
@@ -47,8 +46,7 @@ defmodule Phrampu.Who do
     from w in query,
       join: h in assoc(w, :host),
       join: c in assoc(h, :cluster),
-      #w.is_tty and 
-      where: not w.is_idle and w.updated_at >= type(^Phrampu.Who.mins_ago(20), Ecto.DateTime),
+      where: w.is_tty and not w.is_idle and w.updated_at >= type(^Phrampu.Who.mins_ago(20), Ecto.DateTime),
       preload: 
         [host: {h, 
             cluster: c}]

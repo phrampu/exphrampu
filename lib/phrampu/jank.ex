@@ -8,7 +8,9 @@ defmodule Jank do
       |> Enum.map(fn(c) -> c.name end) 
       |> Enum.map(fn(h) -> spawn_link fn -> (
         case Phrampu.WhoModule.get_who(h) do 
-          {:ok, ret} -> ret |> Phrampu.WhoModule.insert_whos(h)
+          {:ok, ret} -> 
+            ret |> Phrampu.WhoModule.insert_whos(h)
+            Phrampu.RoomChannel.update_all()
           err -> IO.inspect err
         end
       ) end

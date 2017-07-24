@@ -4,8 +4,11 @@ defmodule Phrampu.WhoListView do
   def render("who.json", %{who: who}) do
     %{
       what: who.what,
+      login: who.login,
       student: render("student.json", %{student: who.student}),
-      host: render("host.json", %{host: who.host})
+      host: render("host.json", %{host: who.host}),
+      is_tty: who.is_tty
+
     }
   end
 

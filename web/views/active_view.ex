@@ -4,20 +4,28 @@ defmodule Phrampu.ActiveView do
   def render("who.json", %{who: who}) do
     %{
       what: who.what,
-      host: render("host.json", %{host: who.host})
+      is_tty: who.is_tty,
+      student: render("student.json", %{student: who.student})
     }
   end
 
   def render("host.json", %{host: host}) do
     %{
-      id: host.id,
-      name: host.name
+      name: host.name,
+      whos: render_many(host.whos, __MODULE__, "who.json", as: :who)
+    }
+  end
+
+  def render("student.json", %{student: student}) do
+    %{
+      name: student.name
     }
   end
 
   def render("cluster.json", %{cluster: cluster}) do
     %{
-      name: cluster.name
+      name: cluster.name,
+      hosts: render_many(cluster.hosts, __MODULE__, "host.json", as: :host)
     }
   end
 

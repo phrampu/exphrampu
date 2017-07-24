@@ -4,26 +4,40 @@
 // To use Phoenix channels, the first step is to import Socket
 // and connect at the socket path in "lib/my_app/endpoint.ex":
 import {Socket} from "phoenix"
+import Vue from 'vue'
+import MyApp from "../components/my-app.vue"
 
 let socket = new Socket("/socket", {params: {token: window.userToken}});
 
 socket.connect();
 
-let channel = socket.channel("phrampu", {});
+Vue.component('my-app', MyApp)
 
-var data = [];
-
-channel.on('new_message', payload => {
-  data = payload.data;
-  console.log(data);
-});
-
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp);
-    channel.push('send_data', {});
-  })
-  .receive("error", resp => { console.log("Unable to join", resp) });
-
-
+window.addEventListener('load', function () {
+  new Vue({
+    el: '#app',
+   	mounted() {
+			this.channel = socket.channel("room:phrampu", {});
+			this.channel.on("new_message", payload => {
+				this.whos = payload['whos'];
+				console.log(this.whos);
+			});
+			this.channel.join()
+				.receive("ok", response => {
+					console.log("Joined successfully", response);
+					this.channel.push("send_data", {});
+				}).receive("error", response => { console.log("Unable to join", response) })
+		},
+		data() {
+			return {
+				channel: null,
+				whos: []
+			}
+		},
+    render(createElement) {
+      return createElement(MyApp, {})
+    }
+  });
+})
 
 export default socket
