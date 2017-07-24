@@ -1,13 +1,12 @@
 defmodule Phrampu.Host do
   use Phrampu.Web, :model
   import Ecto.Query
+  alias Phrampu.Who
 
-  @derive {Poison.Encoder, only: 
-    [:name, :cluster]
-  }
   schema "hosts" do
     field :name, :string
     belongs_to :cluster, Phrampu.Cluster
+    has_many :whos, {"whos", Who}, on_delete: :delete_all
 
     timestamps()
   end

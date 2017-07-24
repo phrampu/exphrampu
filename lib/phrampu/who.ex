@@ -1,5 +1,6 @@
 defmodule Phrampu.WhoModule do
   alias Phrampu.Who
+  require Logger
 
   def user do
     System.get_env("PHRAMPU_USERNAME")
@@ -24,9 +25,19 @@ defmodule Phrampu.WhoModule do
           {:ok, ret} ->
             {:ok, ret}
           error ->
+            Logger.error "couldn't connect to #{hostname}"
             error
         end
       error ->
+        error
+    end
+  end
+
+  def get_who!(hostname) do
+    case get_who(hostname) do
+      {:ok, ret} ->
+        ret
+      {:error, error} ->
         error
     end
   end
@@ -70,17 +81,51 @@ defmodule Phrampu.WhoModule do
     end
   end
 
-  def insert_whos(hostname, w_string) do
-    w_string
-    |> String.split("\n")
-    |> Enum.slice(2..-1)
-    |> Enum.filter(fn(x) -> x != "" end)
-    |> Enum.each(fn(x) -> insert(hostname, x) end)
+  def insert_whos(w_string, hostname) do
+    sp = 
+      w_string
+      |> String.split("\n")
+
+    contains_from = 
+      sp
+      |> Enum.at(1)
+      |> String.contains?("FROM")
+
+    sp
+      |> Enum.slice(2..-1)
+      |> Enum.filter(fn(x) -> x != "" end)
+      |> Enum.each(fn(x) -> insert(hostname, x, contains_from) end)
   end
 
-  def insert(hostname, who_string) do
+  def insert(hostname, who_string, contains_from) do
+    case contains_from do
+      true ->
+        insert_with_from(hostname, who_string)
+      false ->
+        insert_without_from(hostname, who_string)
+    end
+  end
+
+  def insert_with_from(hostname, who_string) do
+    [user, tty, from, login, idle, jcpu, pcpu | what] = String.split who_string
+    %{
+      student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
+      host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
+      tty: tty,
+      from: from,
+      is_tty: tty |> is_tty,
+      is_idle: idle |> is_idle,
+      login: login,
+      idle: idle,
+      jcpu: jcpu,
+      pcpu: pcpu,
+      what: what |> Enum.join(" ")
+    } |> insert!()
+  end
+
+  def insert_without_from(hostname, who_string) do
     [user, tty, login, idle, jcpu, pcpu | what] = String.split who_string
-    Who.changeset(%Who{}, %{
+    %{
       student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
       host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
       tty: tty,
@@ -91,6 +136,28 @@ defmodule Phrampu.WhoModule do
       jcpu: jcpu,
       pcpu: pcpu,
       what: what |> Enum.join(" ")
-    }) |> Phrampu.Repo.insert!
+    } |> insert!()
+  end
+
+  def insert!(params) do
+    # TODO use this way, where we store
+    # ALL who entries, and don't just update
+    # the same entry over and over,
+    # losing all the old ones
+    #%Who{}
+    #|> Who.changeset(params) 
+    #|> Phrampu.Repo.insert!
+
+    # TODO FIX THIS HACK
+    case Phrampu.Repo.get_by(Who,
+      student_id: params.student_id,
+      host_id: params.host_id,
+      tty: params.tty) do
+        nil -> %Who{}
+        who -> who
+      end
+      |> Who.changeset(params) 
+      |> Phrampu.Repo.insert_or_update
+
   end
 end

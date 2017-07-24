@@ -28,6 +28,11 @@
   </li>
 
   <li>
+    <strong>From:</strong>
+    <%= @who.from %>
+  </li>
+
+  <li>
     <strong>Idle:</strong>
     <%= @who.idle %>
   </li>
