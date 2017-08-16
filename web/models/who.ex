@@ -22,7 +22,7 @@ defmodule Phrampu.Who do
 
   def not_idle(query) do
     query 
-      |> where([w], w.is_idle == false)
+    #  |> where([w], w.is_idle == false)
   end
 def is_tty(query) do
     query 
