@@ -16,6 +16,7 @@ defmodule Phrampu.Periodically do
   end
 
   defp schedule_work() do
-    Process.send_after(self(), :work, 1 * 30 * 60 * 1000) # In 30 mins
+    #  Process.send_after(self(), :work, 1 * 30 * 60 * 1000) # In 30 mins
+     Process.send_after(self(), :work, 1 * 60 * 60 * 1000) # In 60 mins
   end
 end

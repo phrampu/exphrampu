@@ -1,6 +1,7 @@
 defmodule Jank do
   alias Phrampu.Host
   alias Phrampu.Repo
+  require Logger
 
   def jank() do
     Host
@@ -11,7 +12,10 @@ defmodule Jank do
           {:ok, ret} -> 
             ret |> Phrampu.WhoModule.insert_whos(h)
             Phrampu.RoomChannel.update_all()
-          err -> IO.inspect err
+          {:error, msg} -> 
+            Logger.error "error in jank: #{msg}"
+          _ ->
+            Logger.error "something broke in jank"
         end
       ) end
       end)

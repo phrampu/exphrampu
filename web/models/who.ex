@@ -26,7 +26,7 @@ defmodule Phrampu.Who do
   end
 def is_tty(query) do
     query 
-      |> where([w], w.is_tty == true)
+    #   |> where([w], w.is_tty == true)
   end
 
   def mins_ago(mins) do

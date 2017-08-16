@@ -11,6 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 NimbleCSV.define(CSV, separator: ":", escape: ~s("))
 
+require Logger
 alias Phrampu.Student
 alias Phrampu.Host
 alias Phrampu.Cluster
@@ -31,8 +32,13 @@ Phrampu.Repo.delete_all(Cluster)
 			machine: machine} 
 		end)
 	 |> Enum.each(fn params ->
-		 changeset = Student.changeset(%Student{}, params)
-		 Phrampu.Repo.insert!(changeset)
+		  changeset = Student.changeset(%Student{}, params)
+		  case Phrampu.Repo.insert(changeset) do
+       {:ok, _} ->
+         Logger.info "Student '#{params.name}' inserted successfully!"
+       _ ->
+         Logger.error "Student '#{params.name}' failed to insert"
+      end
 		end)
 
 Application.get_env(:phrampu, :clusters)
@@ -48,7 +54,12 @@ Application.get_env(:phrampu, :clusters)
           name: host,
           cluster_id: cluster.id
         })
-        Phrampu.Repo.insert!(host_changeset)
+        case Phrampu.Repo.insert(host_changeset) do
+          {:ok, _} ->
+            Logger.info "Host '#{host}' inserted successfully!"
+          _ ->
+            Logger.error "Host '#{host}' failed to insert"
+         end
       end)
   end)
 

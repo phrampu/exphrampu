@@ -38,7 +38,10 @@ defmodule Phrampu.WhoModule do
       {:ok, ret} ->
         ret
       {:error, error} ->
+        Logger.error "couldn't connect to #{hostname}, #{error}"
         error
+      err ->
+        Logger.error "couldn't connect to #{hostname}, #{err}"
     end
   end
 
@@ -47,6 +50,7 @@ defmodule Phrampu.WhoModule do
       {:ok, w_string, 0} ->
         {:ok, w_string}
       {:error, reason} ->
+        Logger.error "couldn't 'w': #{reason}"
         {:error, reason}
     end
   end
@@ -106,21 +110,34 @@ defmodule Phrampu.WhoModule do
     end
   end
 
+  def get_student_id(user) do
+    case Phrampu.Repo.get_by(Phrampu.Student, career_acc: user) do
+      {:ok, student} ->
+        student.id
+      _ ->
+        Logger.error "couldn't find career acc '#{user}' in db"
+        nil
+    end
+  end
+
   def insert_with_from(hostname, who_string) do
     [user, tty, from, login, idle, jcpu, pcpu | what] = String.split who_string
-    %{
-      student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
-      host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
-      tty: tty,
-      from: from,
-      is_tty: tty |> is_tty,
-      is_idle: idle |> is_idle,
-      login: login,
-      idle: idle,
-      jcpu: jcpu,
-      pcpu: pcpu,
-      what: what |> Enum.join(" ")
-    } |> insert!()
+    student_id = get_student_id user
+    if student_id do
+      %{
+        student_id: student_id,
+        host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
+        tty: tty,
+        from: from,
+        is_tty: tty |> is_tty,
+        is_idle: idle |> is_idle,
+        login: login,
+        idle: idle,
+        jcpu: jcpu,
+        pcpu: pcpu,
+        what: what |> Enum.join(" ")
+      } |> insert!()
+    end
   end
 
   def insert_without_from(hostname, who_string) do

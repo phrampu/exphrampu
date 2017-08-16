@@ -9212,9 +9212,9 @@ window.addEventListener('load', function () {
 exports.default = socket;
 });
 
-;require.alias("phoenix_html/priv/static/phoenix_html.js", "phoenix_html");
+;require.alias("vue/dist/vue.runtime.common.js", "vue");
+require.alias("phoenix_html/priv/static/phoenix_html.js", "phoenix_html");
 require.alias("phoenix/priv/static/phoenix.js", "phoenix");
-require.alias("vue/dist/vue.runtime.common.js", "vue");
 require.alias("process/browser.js", "process");process = require('process');require.register("___globals___", function(exports, require, module) {
   
 });})();require('___globals___');
