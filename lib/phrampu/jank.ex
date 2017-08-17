@@ -1,8 +1,10 @@
 defmodule Jank do
   alias Phrampu.Host
   alias Phrampu.Repo
+  require Logger
 
   def jank() do
+    :ssh.start
     Host
       |> Repo.all 
       |> Enum.map(fn(c) -> c.name end) 
@@ -11,7 +13,9 @@ defmodule Jank do
           {:ok, ret} -> 
             ret |> Phrampu.WhoModule.insert_whos(h)
             Phrampu.RoomChannel.update_all()
-          err -> IO.inspect err
+            Logger.info "Successfully added whos"
+          {:error, msg} -> 
+            Logger.error "error in jank: #{msg}"
         end
       ) end
       end)

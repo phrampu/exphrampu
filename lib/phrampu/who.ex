@@ -11,11 +11,19 @@ defmodule Phrampu.WhoModule do
   end
 
   def connect(ip) do
-    :ssh.start
-    SSHEx.connect(
-    ip: ip,
-    user: user(),
-    password: pass())
+    Logger.info "Connecting to #{ip}"
+    case SSHEx.connect(
+      ip: ip,
+      user: user(),
+      password: pass()) do
+        {:ok, conn} ->
+          Logger.info "Successfully connected to #{ip}"
+          {:ok, conn}
+        {:error, error} -> 
+        # TODO retry 3 or 4 times after delay
+          Logger.error "Couldn't connect to #{ip}, #{error}"
+          {:error, error}
+      end
   end
 
   def get_who(hostname) do
@@ -24,12 +32,13 @@ defmodule Phrampu.WhoModule do
         case w(conn) do
           {:ok, ret} ->
             {:ok, ret}
-          error ->
+          {:error, error} ->
             Logger.error "couldn't connect to #{hostname}"
-            error
+            {:error, error}
         end
-      error ->
-        error
+      {:error, error} ->
+        Logger.error "error in get_who: #{error}"
+        {:error, error}
     end
   end
 
@@ -38,7 +47,10 @@ defmodule Phrampu.WhoModule do
       {:ok, ret} ->
         ret
       {:error, error} ->
+        Logger.error "couldn't connect to #{hostname}, #{error}"
         error
+      err ->
+        Logger.error "couldn't connect to #{hostname}, #{err}"
     end
   end
 
@@ -47,6 +59,7 @@ defmodule Phrampu.WhoModule do
       {:ok, w_string, 0} ->
         {:ok, w_string}
       {:error, reason} ->
+        Logger.error "couldn't 'w': #{reason}"
         {:error, reason}
     end
   end
@@ -106,37 +119,54 @@ defmodule Phrampu.WhoModule do
     end
   end
 
+  def get_student_id(user) do
+    case Phrampu.Repo.get_by(Phrampu.Student, career_acc: user) do
+      nil ->
+        Logger.error "couldn't find career acc '#{user}' in db"
+        nil
+      student ->
+        IO.inspect student
+        student.id
+    end
+  end
+
   def insert_with_from(hostname, who_string) do
     [user, tty, from, login, idle, jcpu, pcpu | what] = String.split who_string
-    %{
-      student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
-      host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
-      tty: tty,
-      from: from,
-      is_tty: tty |> is_tty,
-      is_idle: idle |> is_idle,
-      login: login,
-      idle: idle,
-      jcpu: jcpu,
-      pcpu: pcpu,
-      what: what |> Enum.join(" ")
-    } |> insert!()
+    student_id = get_student_id user
+    if student_id do
+      %{
+        student_id: student_id,
+        host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
+        tty: tty,
+        from: from,
+        is_tty: tty |> is_tty,
+        is_idle: idle |> is_idle,
+        login: login,
+        idle: idle,
+        jcpu: jcpu,
+        pcpu: pcpu,
+        what: what |> Enum.join(" ")
+      } |> insert!()
+    end
   end
 
   def insert_without_from(hostname, who_string) do
     [user, tty, login, idle, jcpu, pcpu | what] = String.split who_string
-    %{
-      student_id: Phrampu.Repo.get_by!(Phrampu.Student, career_acc: user).id,
-      host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
-      tty: tty,
-      is_tty: tty |> is_tty,
-      is_idle: idle |> is_idle,
-      login: login,
-      idle: idle,
-      jcpu: jcpu,
-      pcpu: pcpu,
-      what: what |> Enum.join(" ")
-    } |> insert!()
+    student_id = get_student_id user
+    if student_id do
+      %{
+        student_id: student_id,
+        host_id: Phrampu.Repo.get_by!(Phrampu.Host, name: hostname).id,
+        tty: tty,
+        is_tty: tty |> is_tty,
+        is_idle: idle |> is_idle,
+        login: login,
+        idle: idle,
+        jcpu: jcpu,
+        pcpu: pcpu,
+        what: what |> Enum.join(" ")
+      } |> insert!()
+    end
   end
 
   def insert!(params) do
